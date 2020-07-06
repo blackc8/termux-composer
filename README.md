@@ -5,8 +5,10 @@ a script to install php composer in termux
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes
 
 ### Installing
+Just paste this command to install php composer in your termux.
+
 ```
-sh <(curl https://raw.githubusercontent.com/blackc8/termux-composer/master/install)
+sh <(curl -sS https://raw.githubusercontent.com/blackc8/termux-composer/master/install)
 ```
 
 ## Contributers
