@@ -50,7 +50,7 @@ else
 fi
 
 
-scs "Downloding composer.phar...."
+scs "Downloding composer.phar..."
 mkdir -p $PREFIX"/share/composer/" 
 curl -sS $composer_url -o $PREFIX"/share/composer/composer.phar" 2>/dev/null
 if [ "$?" = "0" ];then
@@ -61,25 +61,10 @@ else
   exit
 fi
 
-scs "Installing composer.phar...\n"
-php $PREFIX"/share/composer/composer.phar" --install-dir="$PREFIX/share/composer/"  
-if [ "$?" = "0" ];then 
-  scs "composer.phar successfully installed!\n"
-else
-
-  printf $bold$red"error\n"
-  wrn "Unable to install composer.php. This version might not be supported!"
-  scs "Cleaning..."
-  rm -rf $PREFIX"/share/composer/"
-  printf "done\n"
-  exit
-fi
-
 scs "Adding files to bin..."
 echo "php $PREFIX/share/composer/composer.phar \$@">$PREFIX"/bin/composer"
 chmod +x $PREFIX"/bin/composer"
 printf "done\n"
-echo ""
 scs "composer successfully installed in your termux\n"
 printf "Use $bold$cyan composer$ncol to run composer\n"
 
