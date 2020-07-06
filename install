@@ -1,0 +1,85 @@
+ncol="\033[0m"
+bold="\033[1m"
+dim="\033[2m"
+uline="\033[4m"
+reverse="\033[7m"
+red="\033[31m"
+green="\033[32m"
+yellow="\033[33m"
+blue="\033[34m"
+purple="\033[35m"
+cyan="\033[36m"
+white="\033[37m"
+
+label(){ #labelName
+  printf $reverse$bold$cyan"$1$ncol\n"
+}
+addLog(){ # symbol color text
+  printf $dim$2$1$ncol$bold$2"$3$ncol"
+}
+addPad(){ # text
+  printf "  $1" | sed -z 's/\n/\n  /g'
+  printf "\n"
+}
+scs(){ # message
+ addLog "["$ncol$bold$green"+$ncol$green$dim]" $green " $1"
+}
+wrn(){
+  addLog "["$ncol$bold$yellow"+$ncol$yellow$dim]" $yellow " $1\n"
+}
+composer_url="https://raw.githubusercontent.com/blackc8/termux-composer/master/composer.phar"
+
+label "Termux PHP Composer Insataller"
+printf "     $bold$blue author:$white @blackc8$ncol\n"
+
+
+scs "Checking for php..."
+if [ -f $PREFIX"/bin/php" ];then
+  printf "found\n"
+else
+  printf $bold$red"not found\n"
+  scs "Installing php...."
+  echo ""
+  pkg install -y php
+  if [ "$?" = "0" ];then
+    scs "php successfully installed!\n"
+  else
+    printf $bold$red"error installing php!\n"
+    exit
+  fi
+fi
+
+
+scs "Downloding composer.phar...."
+mkdir -p $PREFIX"/share/composer/" 
+curl -sS $composer_url -o $PREFIX"/share/composer/composer.phar" 2>/dev/null
+if [ "$?" = "0" ];then
+  printf "done\n"
+else
+  printf $bold$red"error\n"
+  wrn "Unable to fetch composer.phar!"
+  exit
+fi
+
+scs "Installing composer.phar...\n"
+php $PREFIX"/share/composer/composer.phar" --install-dir="$PREFIX/share/composer/"  
+if [ "$?" = "0" ];then 
+  scs "composer.phar successfully installed!\n"
+else
+
+  printf $bold$red"error\n"
+  wrn "Unable to install composer.php. This version might not be supported!"
+  scs "Cleaning..."
+  rm -rf $PREFIX"/share/composer/"
+  printf "done\n"
+  exit
+fi
+
+scs "Adding files to bin..."
+echo "php $PREFIX/share/composer/composer.phar \$@">$PREFIX"/bin/composer"
+chmod +x $PREFIX"/bin/composer"
+printf "done\n"
+echo ""
+scs "composer successfully installed in your termux\n"
+printf "Use $bold$cyan composer$ncol to run composer\n"
+
