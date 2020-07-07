@@ -25,19 +25,16 @@ scs(){ # message
  addLog "["$ncol$bold$green"+$ncol$green$dim]" $green " $1"
 }
 wrn(){
-  addLog "["$ncol$bold$yellow"+$ncol$yellow$dim]" $yellow " $1\n"
+  addLog "["$ncol$bold$yellow"!$ncol$yellow$dim]" $yellow " $1\n"
 }
+
 composer_url="https://raw.githubusercontent.com/blackc8/termux-composer/master/composer.phar"
 
 label "Termux PHP Composer Insataller"
 printf "     $bold$blue author:$white @blackc8$ncol\n"
 
-
-scs "Checking for php..."
-if [ -f $PREFIX"/bin/php" ];then
-  printf "found\n"
-else
-  printf $bold$red"not found\n"
+if [ ! -f $PREFIX"/bin/php" ];then
+  wrn "php not installed!"
   scs "Installing php...."
   echo ""
   pkg install -y php
@@ -50,9 +47,8 @@ else
 fi
 
 
-scs "Downloding composer.phar..."
-mkdir -p $PREFIX"/share/composer/" 
-curl -sS $composer_url -o $PREFIX"/share/composer/composer.phar" 2>/dev/null
+scs "Downloding composer..."
+curl -sS $composer_url -o $PREFIX"/bin/composer" 2>/dev/null
 if [ "$?" = "0" ];then
   printf "done\n"
 else
@@ -61,10 +57,9 @@ else
   exit
 fi
 
-scs "Adding files to bin..."
-echo "php $PREFIX/share/composer/composer.phar \$@">$PREFIX"/bin/composer"
+scs "Installing composer..."
 chmod +x $PREFIX"/bin/composer"
 printf "done\n"
-scs "composer successfully is installed in your termux\n"
+
 printf "Use $bold$cyan composer$ncol to run composer\n"
 
