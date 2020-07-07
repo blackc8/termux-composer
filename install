@@ -65,6 +65,6 @@ scs "Adding files to bin..."
 echo "php $PREFIX/share/composer/composer.phar \$@">$PREFIX"/bin/composer"
 chmod +x $PREFIX"/bin/composer"
 printf "done\n"
-scs "composer successfully installed in your termux\n"
+scs "composer successfully is installed in your termux\n"
 printf "Use $bold$cyan composer$ncol to run composer\n"
 
